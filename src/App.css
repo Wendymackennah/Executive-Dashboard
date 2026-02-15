@@ -1,44 +1,36 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Dashboard from '. /pages/Dashboard';
-import Clients from '. /pages/Clients';
-import Licenses from '. /pages/Licenses';
-import Sidebar from '. /components/Sidebar';
-import { CustomThemeProvider, useThemeMode } from '. /contexts/ThemeContext';
-import { CssBaseline, IconButton } from '@mui/material';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-
-function Layout({ children }) {
-  const { toggleMode } = useThemeMode();
-
-  return (
-    <div style={{ display: 'flex' }}>
-      <Sidebar />
-      <div style={{ flex: 1, padding: '20px' }}>
-        <IconButton onClick={toggleMode} sx={{ float: 'right' }}>
-          <Brightness4Icon />
-        </IconButton>
-        {children}
-      </div>
-    </div>
-  );
-}
+// src/App.jsx
+import React, { useState } from "react";
+import { Box } from "@mui/material";
+import Sidebar from "./components/Sidebar";
+import Dashboard from "./components/Dashboard";
+import Tasks from "./components/Tasks";
+import Calendar from "./components/Calendar";
+import Notes from "./components/Notes";
+import Settings from "./components/Settings";
 
 function App() {
+  const [selected, setSelected] = useState("Dashboard");
+
+  const renderContent = () => {
+    switch (selected) {
+      case "Dashboard": return <Dashboard />;
+      case "Tasks": return <Tasks />;
+      case "Calendar": return <Calendar />;
+      case "Notes": return <Notes />;
+      case "Settings": return <Settings />;
+      default: return <Dashboard />;
+    }
+  };
+
   return (
-    <CustomThemeProvider>
-      <CssBaseline />
-      <Router>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/clients" element={<Clients />} />
-            <Route path="/licenses" element={<Licenses />} />
-          </Routes>
-        </Layout>
-      </Router>
-    </CustomThemeProvider>
+    <Box display="flex" height="100vh">
+      <Sidebar selected={selected} setSelected={setSelected} />
+      <Box flex={1} p={3}>
+        {renderContent()}
+      </Box>
+    </Box>
   );
 }
 
 export default App;
+
